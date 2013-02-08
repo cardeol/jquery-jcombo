@@ -32,26 +32,15 @@
 		function __fill($obj,$url,$id,$initext,$inival) {			
 			$.ajax({
 				type: "GET",
-				dataType:"json",					
+				dataType:"jsonp",					
 				url: $url + $id,
-				success: function(j){
-					var choices = '';
-					if (j.length == 0) {
-						choices += '<option value="0"></option>';
-						$obj.html(choices);
-					} else {
-						if($initext!="" && $initext!=null) { 
-							choices += '<option value="0">' + $initext + '</option>';
-						}
-						for (var i = 0; i < j.length; i++) {
-							selected = (j[i][0]==$inival)?' selected="selected"':'';
-							c = j[i];
-							choices += '<option value="' + c[0] + '"' + 
-							selected + '>' + c[1] + 
-							'</option>';
-						}
-						$obj.html(choices);
-					}           										
+				success: function(data){
+					var response = '<option value="0">' + $initext + '</option>';
+					for(var index in data) {
+						var selected = (index==$inival)?' selected="selected"':'';
+						response += '<option value="' + index + '"' + selected + '>' + data[index] + '</option>';
+					}
+					$obj.html(response);					           										
 					$obj.trigger("change");
 				}
 			});					
