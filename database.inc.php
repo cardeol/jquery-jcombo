@@ -2,7 +2,7 @@
 
 	$server = "127.0.0.1";
 	$user = "root";
-	$password = "12345";
+	$password = "";
 	$database = "jcombo.test";
 
 
@@ -13,6 +13,10 @@
 		die("Cannot select database $database");
 	};
 	 
+	 
+	 function mylog($message) {
+		file_put_contents("mylog.txt", $message."\n", FILE_APPEND | LOCK_EX); 
+	 }
 	
 	
 

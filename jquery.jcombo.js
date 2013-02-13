@@ -3,41 +3,50 @@
  * Carlos De Oliveira
  * cardeol@gmail.com
  *
- * Latest Release: Sep 2011 
+ * Latest Release: Feb 2013
  */
-(function($) {
-	$.fn.jCombo = function(url, user_options) {
-		var default_options = {
-				parent: "",
+;(function ($, window, document, undefined) {
+	$.fn.jCombo = function(url, opt) {		
+		var defaults = {
+				parent: null,
+				first_optval : "__jcombo__",
 				selected_value : "0",
-				parent_value : "",
-				initial_text: "-- Please Select --"
+				initial_text: "-- Please Select --"				
 		};				
-		var user_options = $.extend( default_options, user_options) ;
+		var opt = $.extend( defaults, opt) ;
 		var obj = $(this);
-		if(user_options.parent!="") {
-			var $parent = $(user_options.parent);			
+		if(opt.parent!=null) {
+			var $parent = $(opt.parent);			
 			$parent.removeAttr("disabled","disabled");
 			$parent.bind('change',  function(e) {
 				obj.attr("disabled","disabled");
-				if($(this).val()!="0" && $(this).val()!="") obj.removeAttr("disabled");
-				__fill(	obj,
-						url,
-						$(this).val(),
-						user_options.initial_text,
-						user_options.selected_value);				
+				if($(this).val()!=opt.first_optval) obj.removeAttr("disabled");
+				__render(	obj, { 
+					url: url, 
+					id: $(this).val(),
+					first_optval: opt.first_optval, 
+					initext: opt.initial_text, 
+					inival: opt.selected_value 
+				});
 			});
-		} 
-		__fill(obj,url,user_options.parent_value,user_options.initial_text,user_options.selected_value);					
-		function __fill($obj,$url,$id,$initext,$inival) {			
+		} else __render(obj,{ 
+			url: url,
+			id: "",
+			first_optval: opt.first_optval,
+			initext: opt.initial_text,
+			inival: opt.selected_value
+		});					
+		function __render($obj,$options) {			
+			if($options.id==null) return false;
 			$.ajax({
 				type: "GET",
 				dataType:"jsonp",					
-				url: $url + $id,
+				url: $options.url + $options.id,
 				success: function(data){
-					var response = '<option value="0">' + $initext + '</option>';
+					var response = '<option value="' + $options.first_optval + '">' + $options.initext + '</option>';
+					var selected;
 					for(var index in data) {
-						var selected = (index==$inival)?' selected="selected"':'';
+						selected = (index==$options.inival)?' selected="selected"':'';
 						response += '<option value="' + index + '"' + selected + '>' + data[index] + '</option>';
 					}
 					$obj.html(response);					           										
@@ -46,4 +55,4 @@
 			});					
 		}
 	}
-})(jQuery);
+})( jQuery, window, document );

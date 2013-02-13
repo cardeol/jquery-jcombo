@@ -32,7 +32,9 @@ INSERT INTO `combo_states` (`id_state`, `id_country`, `state_name`) VALUES
 (9, 3, 'Parana'),
 (10, 4, 'Illinois'),
 (11, 4, 'Florida'),
-(12, 4, 'New York');
+(12, 4, 'New York')
+(13, 5, 'Miranda'),
+(14, 5, 'Carabobo');
 
 -- cities
 CREATE TABLE `combo_cities` (

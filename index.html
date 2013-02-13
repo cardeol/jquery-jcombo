@@ -1,6 +1,6 @@
 <html><head>
 <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
-<script type="text/javascript" src="jquery.jcombo.js"></script>
+<script type="text/javascript" src="jquery.jcombo.dev.js"></script>
 <title>jCombo - jQuery Cascading Select (Nested Combos).</title>
 <style type="text/css">
 body{background-color:#fff;font-family:"Lucida Grande","bitstream vera sans","trebuchet ms",verdana,arial;margin-left:auto;margin-right:auto;text-align:center}#page{background-color:#efefef;width:900px;margin:50px auto;padding:20px 150px 20px 50px;min-height:600px;border:2px solid #fff;outline:1px solid #ccc;text-align:left}h1,h2{letter-spacing:-1px;color:#2d5ac3;font-weight:normal;margin-bottom:-10px}h1{font-size:22px}h2{font-size:18px}.less{color:#999;font-size:12px}a{color:#295c72}fieldset{width:100%;padding:5px;border:1px solid #cdcdcd}select{border:1px solid black;padding:2px;margin:3px}fieldset legend{color:#2d5ac3;font-weight:bold;width:100%}
@@ -47,37 +47,37 @@ Easy!
 <h3>Typical Select</h3>
 <hr>
 Country:
-<select id="state1"></select>
-<pre>html: &lt;select id=&quot;state1&quot;&gt;&lt;/select&gt;
+<select id="example1_country"></select>
+<pre>html: &lt;select id=&quot;example1&quot;&gt;&lt;/select&gt;
 
-javascript: $("#state1").jCombo("getCountries.php");</pre>
+javascript: $("#example1_country").jCombo("getCountries.php");</pre>
 or<br>
 State:
-<select id="state3"></select><br />
+<select id="example2_state"></select><br />
 <pre>
-html: &lt;select id=&quot;state1&quot;&gt;&lt;/select&gt;
+html: &lt;select id=&quot;example2_state&quot;&gt;&lt;/select&gt;
 
 javascript:
-$("#state3").jCombo("getStates.php", { 
-    initial_text: "-- Seleccione --", 
-    selected_value: "21"
+$("#example2_state").jCombo("getStates.php?id_country=2", { 
+    initial_text: "** Select State **", 
+    selected_value: "5"
 });
 </pre>
 <br>
 <h3>Nested Combos</h3>
 <hr>
+Country:
+<select id="example3_country"></select><br />
 State:
-<select id="state2"></select><br />
-City:
-<select id="city2"></select><br  />
+<select id="example3_state"></select><br  />
 <pre>
 html: 
-	&lt;select id=&quot;state2&quot;&gt;&lt;/select&gt;
-	&lt;select id=&quot;city2&quot;&gt;&lt;/select&gt;
+	&lt;select id=&quot;example3_country&quot;&gt;&lt;/select&gt;
+	&lt;select id=&quot;example3_state&quot;&gt;&lt;/select&gt;
 
 javascript:
-	$("#state2").jCombo("getStates.php");
-	$("#city2").jCombo("getCities.php?id_state=", { parent: "#state2" } );	
+	$("#example2_country").jCombo("getCountries.php");
+	$("#example2_state").jCombo("getStates.php?id_country=", { parent: "#example2_country" } );	
 </pre><br>
 or<br><br>
 1:<select name="list1" id="list1"></select><br />
@@ -90,62 +90,40 @@ html:
 	&lt;select name=&quot;list3&quot; id=&quot;list3&quot;&gt;&lt;/select&gt;
 
 javascript:
-    $("#list1").jCombo(&quot;getEstados.php&quot;, { selected_value : '15' } );
-    $("#list2").jCombo(&quot;getMunicipios.php?id=&quot;, { 
+    $("#list1").jCombo(&quot;getCountries.php.php&quot;, { selected_value : '1' } );
+    $("#list2").jCombo(&quot;getStates.php?id_country=&quot;, { 
 					parent: &quot;#list1&quot;, 
-					parent_value: '15', 
-					selected_value: '178' 
+					selected_value: '2' 
 				});		
-    $("#list3").jCombo(&quot;getParroquias.php?id=&quot;, { 
+    $("#list3").jCombo(&quot;getCities.php?id_state=&quot;, { 
 					parent: &quot;#list2&quot;, 
-					parent_value: '178', 
-					selected_value: '630' 
+					selected_value: 4 
 				});
 </pre>
 <script type="text/javascript">
 $(function() {
 	/* simple combos */
-	$("#state1").jCombo("getCountries.php");
-	$("#state3").jCombo("getStates.php", { 
-			initial_text: "-- Seleccione --", 
-			selected_value: "21"
+	/*
+	$("#example1_country").jCombo("getCountries.php");
+	$("#example2_state").jCombo("getStates.php?id_country=2", { 
+			initial_text: "** Select State **", 
+			selected_value: "5"
 	});
-	$("#state3").jCombo("getStates.php", { 
-			initial_text: "-- Seleccione --", 
-			selected_value: "4"
-	});
-	$("#state2").jCombo("getStates.php");
-	$("#city2").jCombo("getCities.php?id_state=", { parent: "#state2" } );	
+	
+	$("#example3_country").jCombo("getCountries.php");
+	$("#example3_state").jCombo("getStates.php?id_country=", { parent: "#example3_country" } );	
+	*/
+	
 	$("#list1").jCombo("getCountries.php", { selected_value : '1' } );
     $("#list2").jCombo("getStates.php?id_country=", { 
 					parent: "#list1", 
-					parent_value: '15', 
-					selected_value: '178' 
+					selected_value: '2' 
 				});		
-    $("#list3").jCombo("getParroquias.php?id=", { 
+    $("#list3").jCombo("getCities.php?id_state=", { 
 					parent: "#list2", 
-					parent_value: '178', 
-					selected_value: '630' 
+					selected_value: '4' 
 				});
 
-	/* nested combos */
-	/*
-	$("#state2").jCombo("getStates.php");
-	$("#city2").jCombo("getCities.php?id=", { parent: "#state2" } );	
-	/* nested combos example 2 
-	$("#list1").jCombo("getEstados.php", { selected_value : '15' } );
-    $("#list2").jCombo("getMunicipios.php?id=", { 
-					parent: "#list1", 
-					parent_value: '15', 
-					selected_value: '178' 
-				});		
-    $("#list3").jCombo("getParroquias.php?id=", { 
-					parent: "#list2", 
-					parent_value: '178', 
-					selected_value: '630' 
-				});
-	/* change params 
-	*/
 });
 </script>
 </fieldset>
