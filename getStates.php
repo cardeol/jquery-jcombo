@@ -1,13 +1,16 @@
 <?php
 
-	include("database.inc.php");	
+	include("database.inc.php");		
 
 	  // Get parameters from Array
-    $id_country = !empty($_GET['id_country'])?intval($_GET['id_country']):'%%';
+    $id_country = !empty($_GET['id_country'])?intval($_GET['id_country']):0;
 	
-	$query = "SELECT id_state,state_name FROM combo_states WHERE id_country like '$id_country';";
+	$query = "SELECT id_state,state_name FROM combo_states WHERE id_country = '$id_country'";
+	//if($id_country>0) $query.=" WHERE id_country = '$id_country'";
 	
 	$result = mysql_query($query);
+	mylog($_SERVER['REQUEST_URI']);
+	mylog($query);
     $items = array();
     if($result && 
        mysql_num_rows($result)>0) {
