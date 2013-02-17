@@ -1,17 +1,14 @@
-/*!
- * jQuery jCombo Plugin
- * Carlos De Oliveira
- * cardeol@gmail.com
- *
- * Latest Release: Feb 2013
- */
+// jCombo v2.0
+// Carlos De Oliveira cardeol@gmail.com (c) Feb 2013
 ;(function ($, window, document, undefined) {
 	$.fn.jCombo = function(url, opt) {		
 		var defaults = {
 				parent: null,
 				first_optval : "__jcombo__",
 				selected_value : "0",
-				initial_text: "-- Please Select --"				
+				initial_text: "-- Please Select --",
+				method: "GET",
+				dataType: "jsonp"								
 		};				
 		var opt = $.extend( defaults, opt) ;
 		var obj = $(this);
@@ -26,7 +23,9 @@
 					id: $(this).val(),
 					first_optval: opt.first_optval, 
 					initext: opt.initial_text, 
-					inival: opt.selected_value 
+					inival: opt.selected_value,
+					method: opt.method,
+					dataType: opt.dataType
 				});
 			});
 		} else __render(obj,{ 
@@ -34,13 +33,15 @@
 			id: "",
 			first_optval: opt.first_optval,
 			initext: opt.initial_text,
-			inival: opt.selected_value
+			inival: opt.selected_value,
+			method: opt.method,
+			dataType: opt.dataType
 		});					
 		function __render($obj,$options) {			
 			if($options.id==null) return false;
 			$.ajax({
-				type: "GET",
-				dataType:"jsonp",					
+				type: $options.method,
+				dataType: $options.dataType,					
 				url: $options.url + $options.id,
 				success: function(data){
 					var response = '<option value="' + $options.first_optval + '">' + $options.initext + '</option>';
