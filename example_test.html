@@ -1,14 +1,13 @@
 <html><head>
 <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
-<script type="text/javascript" src="jquery.jcombo.dev2.js"></script>
-<!--script type="text/javascript" src="jquery.jcombo.js"></script-->
+<script type="text/javascript" src="jquery.jcombo.js"></script>
 <body>
 <select name="list1" id="list1"></select><br />
 <select name="list2" id="list2"></select><br  />
 <select name="list3" id="list3"></select>
 <script type="text/javascript">
 $(function() {
-	$("#list1").jCombo("getCountries.php", { selected_value : '1' } );
+    $("#list1").jCombo("getCountries.php", { selected_value : '1' } );
     $("#list2").jCombo("getStates.php?id_country=", { parent: "#list1" });		
     $("#list3").jCombo("getCities.php?id_state=", { parent: "#list2" });
 });
