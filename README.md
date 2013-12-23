@@ -4,6 +4,22 @@ jCombo
 
 This plugin simplifies the process to populate data into SELECT tags, even if nested or not. The only condition is to put the fields in query consecutively in order to create pairs of [value],[text] inside the Json File. Unobtrusive, without fancy effects, just takes data as fast as possible.
 
+Data Format (server side)
+-------------------------
+
+The output must be in json with "id" and "value" attributes to avoid javascript sorting and preserve order.
+
+json response example:
+<pre>
+[
+    {"id":"1","value":"Alto Orinoco"},
+    {"id":"2","value":"Atabapo"},
+    {"id":"3","value":"Atures"},
+    {"id":"4","value":"Autana"},
+    {"id":"5","value":"Maroa"}
+]
+</pre>
+
 
 Example 1: Simple SELECT
 ------------------------
