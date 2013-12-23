@@ -14,26 +14,23 @@
         this.options = $.extend( {}, defaults, options) ;
         this.element = element;
         this.init();                        
-    };
-    
+    };    
     Plugin.prototype = {      
-        _getData: function(url,callback) {
+        _getData: function(url,cback) {
             var self = this;   
             window.__jcombo_data_cache = (typeof window.__jcombo_data_cache === "undefined") ? {} : window.__jcombo_data_cache;
-            var cacheKey = JSON.stringify(url);  
-            if (!window.__jcombo_data_cache[cacheKey]) {
+            var cK = JSON.stringify(url);  
+            if (!window.__jcombo_data_cache[cK]) {
                 $.ajax({
                     type: self.options.method,
                     dataType: self.options.dataType,                    
                     url: url,
                     success: function(data) {
-                        window.__jcombo_data_cache[cacheKey] = data;   
-                        callback(data);
+                        window.__jcombo_data_cache[cK] = data;   
+                        cback(data);
                     }
                 });                 
-            } else {
-                callback(window.__jcombo_data_cache[cacheKey]);
-            }            
+            } else setTimeout(function() { cback(window.__jcombo_data_cache[cK]); },0);
         },
         _firstOption: function() {
             if(this.initial_text == "") return "";
@@ -66,9 +63,9 @@
             }            
             if(this.options.url!=null) {     
                 $(this.element).data("jcombo-url",this.options.url);
-                var myurl = this.options.url;
-                if(this.options.parent!=null) myurl+=parent_selected;
-                this._getData(myurl ,function(data) {                                                         
+                var turl = this.options.url;
+                if(this.options.parent!=null) turl+=parent_selected;
+                this._getData(turl ,function(data) {                                                         
                     var inner = self._renderSelect(data,self.options.selected_value);
                     $(self.element).html(inner);
                 });                                    
@@ -83,16 +80,16 @@
                     }                    
                     $(elem).data("jcombo-children",cselec);
                     $(elem).bind("change",function() {
-                        var selectors =$(elem).data("jcombo-children");
+                        var xsel =$(elem).data("jcombo-children");
                         var value = $(elem).val();
-                        for(k in selectors) {                                                        
-                            var selector = selectors[k];
+                        for(k in xsel) {                                                        
+                            var msel = xsel[k];
                             if(value == self.options.first_optval) {
-                                $(selector).html(self._firstOption());
-                                $(selector).attr("disabled","disabled");
+                                $(msel).html(self._firstOption());
+                                $(msel).attr("disabled","disabled");
                             } else {           
-                                $(selector).removeAttr("disabled");      
-                                $(selector).each(function(index,son) {
+                                $(msel).removeAttr("disabled");      
+                                $(msel).each(function(index,son) {
                                     var url = $(son).data("jcombo-url");
                                     self._getData(url + value,function(data) {
                                         var inner = self._renderSelect(data);
@@ -105,8 +102,7 @@
                     });                      
                 });
             };           
-        }
-        
+        }        
     };
     $.fn[pluginName] = function ( options ) {
         options.selector = $(this).selector;
