@@ -15,7 +15,7 @@
     if($result && 
        mysql_num_rows($result)>0) {
         while($row = mysql_fetch_array($result)) {
-            $items[$row[0]] = $row[1];
+            $items[] = array("id" => $row[0], "value" => $row[1]);
         }        
     }
     mysql_close();	
