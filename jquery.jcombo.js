@@ -34,10 +34,11 @@
         },
         _getJson: function(url,cback) {
             var self = this;           
-            var mydata = (this.options.orig_data == null) ? "" : this.options.orig_data + "&";
+            var mydata = (this.options.orig_data == null) ? "" : this.options.orig_data; 
+			mydata += "&" + (self.options.data ==null )?"":self.options.data;
 			$.ajax({
 				url: url,
-				data: mydata + self.options.data,
+				data: mydata,
 				type: self.options.dataType,                
 				dataType: "jsonp",
 				method: self.options.method,
@@ -84,48 +85,43 @@
                 response.push(this._renderOption(option.id,option.value,option.id == selected_value));                
             }
             return response.join("");
-        },                
+        },
+		_bindSelect:function (value) {
+			var self = this;
+			if(typeof value === "undefined") value = this.options.selected_value;
+			var xurl = this.options.url;
+			if(this.options.parent!=null && value!=null) {
+				if(this.options.input_param==null) xurl+= (value==null)?"":value;                          
+                else this._addParameter(this.options.input_param,value);
+			}
+			if(value==this.options.first_optval) {
+				$(this.element).html(this._firstOption());
+				$(this.element).attr("disabled","disabled");
+			} else {
+				$(this.element).removeAttr("disabled");
+				this._getData(xurl, function(data) {
+					$(self.element).html(self._renderSelect(data,value));
+					if(value!=null) {
+						$(self.element).trigger("change");
+						if(self.options.onChange != null) self.options.onChange($(elem).val());
+					} 
+					if(data.length == 0) $(self.element).attr("disabled","disabled");
+				});
+			}
+		},
         init: function() {                      
             var self = this;            
-            this.options.orig_data = (this.options.data == null) ? "" : this.options.data;
+            this.options.orig_data = this.options.data;
             var parent_selected = null;            
-            if(this.options.url!=null) {     
-                var turl = this.options.url;
-                if(this.options.parent!=null) {
-                    if(this.options.input_param==null) turl+=parent_selected;                          
-                    else this._addParameter(this.options.input_param,parent_selected);
-                } 
-                this._getData(turl ,function(data) {                                                         
-                    $(self.element).html(self._renderSelect(data,self.options.selected_value));
-                });                                    
-            }           
+            if(this.options.url!=null) this._bindSelect();                                    
             if(this.options.parent!=null) {
                 var parents = this.options.parent;
                 $(parents).each(function(index,elem) {                                              
-                     $(elem).bind("change",function() {
-                          var value = $(elem).val();
-						  if(value == self.options.first_optval) {
-                                $(self.element).html(self._firstOption());
-                                $(self.element).attr("disabled","disabled");
-                          } else { 
-		  	 	$(self.element).removeAttr("disabled");								
-				if(self.options.input_param!=null) {
-					self._addParameter(self.options.input_param,value);
-					value = '';									
-				 }
-			  	 self._getData(self.options.url + value, function(data) {                                
-				 	$(self.element).html(self._renderSelect(data));
-				 	$(self.element).trigger("change");
-				 	if(self.options.onChange != null) {
-				  		self.options.onChange($(elem).val());
-					}
-	 			 });
-			  }
-						  
-                     });
-
-                });
-            };           
+					$(elem).bind("change",function() {
+						self._bindSelect($(elem).val());			
+					});								
+				});
+           };           
         }        
     };
     $.fn[pluginName] = function ( options ) {
