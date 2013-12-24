@@ -1,3 +1,9 @@
+/*
+ * jQuery jCombo Plugin v3.0
+ * Carlos De Oliveira
+ * cardeol@gmail.com
+ * Latest Release: Dic 2013
+ */
 ;(function ( $, window, document, undefined ) {
     var pluginName = "jCombo",
 		version = "3.0",
@@ -102,19 +108,19 @@
                                 $(self.element).html(self._firstOption());
                                 $(self.element).attr("disabled","disabled");
                           } else { 
-						  	 	$(self.element).removeAttr("disabled");								
-								if(self.options.input_param!=null) {
-									self._addParameter(self.options.input_param,value);
-									value = '';									
-							    }
-						  		self._getData(self.options.url + value, function(data) {                                
-								   $(self.element).html(self._renderSelect(data));
-								   $(self.element).trigger("change");
-								   if(self.options.onChange != null) {
-									   self.options.onChange($(elem).val());
-								   }
- 							   });
-						  }
+		  	 	$(self.element).removeAttr("disabled");								
+				if(self.options.input_param!=null) {
+					self._addParameter(self.options.input_param,value);
+					value = '';									
+				 }
+			  	 self._getData(self.options.url + value, function(data) {                                
+				 	$(self.element).html(self._renderSelect(data));
+				 	$(self.element).trigger("change");
+				 	if(self.options.onChange != null) {
+				  		self.options.onChange($(elem).val());
+					}
+	 			 });
+			  }
 						  
                      });
 
