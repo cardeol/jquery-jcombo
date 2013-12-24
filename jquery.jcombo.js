@@ -8,6 +8,7 @@
             input_param: null,
             data: null,
             selected_value : null,
+			onChange: null,
             initial_text: "-- Please Select --",            
             method: "GET",
             dataType: "jsonp"
@@ -105,15 +106,18 @@
                                 $(self.element).html(self._firstOption());
                                 $(self.element).attr("disabled","disabled");
                           } else { 
-						  	 	$(self.element).removeAttr("disabled");
-								 if(self.options.input_param!=null) {
+						  	 	$(self.element).removeAttr("disabled");								
+								if(self.options.input_param!=null) {
 									self._addParameter(self.options.input_param,value);
 									value = '';									
 							    }
 						  		self._getData(self.options.url + value, function(data) {                                
 								   $(self.element).html(self._renderSelect(data));
 								   $(self.element).trigger("change");
-							  });
+								   if(self.options.onChange != null) {
+									   self.options.onChange($(elem).val());
+								   }
+ 							   });
 						  }
 						  
                      });
