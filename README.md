@@ -54,7 +54,9 @@ $(function() {
       selected_value: '178'
     });
     $("#list3").jCombo({
-      url: "getParroquias.php?id=",
+      url: "getParroquias.php",
+      input_param: "id",
+      method: "POST"
       parent: "#list2",
       selected_value: '630'
     });
@@ -67,7 +69,6 @@ Options
 <b>url</b>: url to retrieve the data, for child selects the url must be formatted to concat the ID (url + id)
 
 <b>input_param</b>: Parameter name attached to the request (POST OR GET). for example "id" or "cityid"
-
 
 <b>parent</b>: Parent SELECT element from which data is fetched
 
