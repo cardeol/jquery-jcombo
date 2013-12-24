@@ -8,6 +8,7 @@
             input_param: null,
             data: null,
             selected_value : null,
+			onLoad: null,
 			onChange: null,
             initial_text: "-- Please Select --",            
             method: "GET",
@@ -18,19 +19,7 @@
         this.element = element;
         this.init();                        
     };    
-    Plugin.prototype = {               
-        _createCache: function( requestFunction ) {
-            var self = this;
-            self.cache = {};
-            return function( key, callback ) {
-                if ( !self.cache[ key ] ) {
-                    self.cache[ key ] = $.Deferred(function( defer ) {
-                        requestFunction( defer, key );
-                    }).promise();
-                }
-                return self.cache[ key ].done( callback );
-            };
-        },
+    Plugin.prototype = {                      
         _addParameter: function(param,value) {
             var xdata = "";
             if(param==null || value == null) return false;
@@ -40,19 +29,22 @@
         _getJson: function(url,cback) {
             var self = this;           
             var mydata = (this.options.orig_data == null) ? "" : this.options.orig_data + "&";
-            $.jCall = this._createCache(function( defer, url ) {
-                $.ajax({
-                    url: url,
-                    data: mydata + self.options.data,
-                    type: self.options.dataType,                
-                    dataType: "jsonp",
-					method: self.options.method,
-                    success: defer.resolve,
-                    error: defer.reject
-                });
-            });            
-            $.jCall(url,cback);
+			$.ajax({
+				url: url,
+				data: mydata + self.options.data,
+				type: self.options.dataType,                
+				dataType: "jsonp",
+				method: self.options.method,
+				success: cback
+			});   
         },
+		_onLoadCall: function() {
+			if(this.options.onLoad != null) {
+				var f = this.options.onLoad;
+				this.options.onLoad = null;
+				f();
+			}					
+		},
         _getData: function(url,cback) {
             var self = this;   
             window.__jcombo_data_cache = (typeof window.__jcombo_data_cache === "undefined") ? {} : window.__jcombo_data_cache;
@@ -60,9 +52,13 @@
             if (!window.__jcombo_data_cache[cK] ) {
                 self._getJson(url,function(data) {
                     window.__jcombo_data_cache[cK] = data;   
-                    cback(data);
+                    cback(data);					
+					self._onLoadCall();
                 });                
-            } else setTimeout(function() { cback(window.__jcombo_data_cache[cK]); },0);
+            } else setTimeout(function() { 			
+				cback(window.__jcombo_data_cache[cK]); 
+				self._onLoadCall();
+			},0);
         },
         _renderOption: function(v,t,s) {
             var sel = "";
