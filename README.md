@@ -66,6 +66,9 @@ Options
 
 <b>url</b>: url to retrieve the data, for child selects the url must be formatted to concat the ID (url + id)
 
+<b>input_param</b>: Parameter name attached to the request (POST OR GET). for example "id" or "cityid"
+
+
 <b>parent</b>: Parent SELECT element from which data is fetched
 
 <b>initial_text</b>: Default message to select an option. if you set an empty value then does not shows any initial text.
@@ -75,3 +78,8 @@ Options
 <b>method</b>: [ "GET" (default), "POST" ]
 
 <b>dataType</b>: [ "json" , "jsonp" ] is an $.ajax dataType (jsonp as default) 
+
+Events
+------
+
+<b>onChange:</b> Event triggered when the parent select has changed.
