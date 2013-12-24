@@ -27,15 +27,14 @@
     };    
     Plugin.prototype = {                      
         _addParameter: function(param,value) {
-            var xdata = "";
             if(param==null || value == null) return false;
             this.options.data = param + "=" + value;            
 			return true;
         },
         _getJson: function(url,cback) {
             var self = this;           
-            var mydata = (this.options.orig_data == null) ? "" : this.options.orig_data; 
-			mydata += "&" + (self.options.data ==null )?"":self.options.data;
+			var mydata = (self.options.orig_data!=null) ? self.options.orig_data : "";
+			mydata += (self.options.data!=null) ? self.options.data : "";		
 			$.ajax({
 				url: url,
 				data: mydata,
@@ -55,8 +54,8 @@
         _getData: function(url,cback) {
             var self = this;   
             window.__jcombo_data_cache = (typeof window.__jcombo_data_cache === "undefined") ? {} : window.__jcombo_data_cache;
-            var cK = JSON.stringify(url + self.options.orig_data + self.options.data);  
-            if (!window.__jcombo_data_cache[cK] ) {
+            var cK = JSON.stringify(url + self.options.orig_data + "&" + self.options.data);  
+            if (!window.__jcombo_data_cache[cK] || true ) {
                 self._getJson(url,function(data) {
                     window.__jcombo_data_cache[cK] = data;   
                     cback(data);					
@@ -90,22 +89,22 @@
 			var self = this;
 			if(typeof value === "undefined") value = this.options.selected_value;
 			var xurl = this.options.url;
-			if(this.options.parent!=null && value!=null) {
-				if(this.options.input_param==null) xurl+= (value==null)?"":value;                          
+			if(this.options.parent!=null) {
+				if(this.options.input_param == null) xurl+= (value==null)?"":value;                          
                 else this._addParameter(this.options.input_param,value);
 			}
 			if(value==this.options.first_optval) {
 				$(this.element).html(this._firstOption());
 				$(this.element).attr("disabled","disabled");
-			} else {
-				$(this.element).removeAttr("disabled");
-				this._getData(xurl, function(data) {
+			} else {				
+				this._getData(xurl, function(data) {					
+					if(data.length == 0) $(self.element).attr("disabled","disabled");					
 					$(self.element).html(self._renderSelect(data,value));
 					if(value!=null) {
 						$(self.element).trigger("change");
-						if(self.options.onChange != null) self.options.onChange($(elem).val());
+						if(self.options.onChange != null) self.options.onChange(value);												
 					} 
-					if(data.length == 0) $(self.element).attr("disabled","disabled");
+					if(data.length>0) $(self.element).removeAttr("disabled");
 				});
 			}
 		},
@@ -115,8 +114,7 @@
             var parent_selected = null;            
             if(this.options.url!=null) this._bindSelect();                                    
             if(this.options.parent!=null) {
-                var parents = this.options.parent;
-                $(parents).each(function(index,elem) {                                              
+                $(this.options.parent).each(function(index,elem) {                                              
 					$(elem).bind("change",function() {
 						self._bindSelect($(elem).val());			
 					});								
