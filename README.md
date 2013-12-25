@@ -86,4 +86,4 @@ Events
 
 <b>onChange:</b> Event triggered when the parent select has changed.
 
-<b>onLoad:</b> This event is triggered when the data is loaded for the first time.
+<b>onLoad:</b> This event is executed when the data is loaded for the first time.
