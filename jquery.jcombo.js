@@ -59,11 +59,9 @@
                 self._getJson(url,function(data) {
                     window.__jcombo_data_cache[cK] = data;   
                     cback(data);					
-					self._onLoadCall();
                 });                
             } else setTimeout(function() { 			
 				cback(window.__jcombo_data_cache[cK]); 
-				self._onLoadCall();
 			},0);
         },
         _renderOption: function(v,t,s) {
@@ -94,10 +92,12 @@
 			if(value==this.options.first_optval) {
 				$(this.element).html(this._firstOption());
 				$(this.element).attr("disabled","disabled");
+				self._onLoadCall();
 			} else {				
 				this._getData(xurl, function(data) {					
 					if(data.length == 0) $(self.element).attr("disabled","disabled");					
 					$(self.element).html(self._renderSelect(data,value));
+					self._onLoadCall();
 					if(value!=null) {
 						$(self.element).trigger("change");
 						if(self.options.onChange != null) self.options.onChange(value);												
