@@ -27,17 +27,17 @@
     };    
     Plugin.prototype = {                      
         _addParameter: function(param,value) {
-            if(param==null || value == null) return false;
+			if(param==null || value == null) return false;
             this.options.data = param + "=" + value;            
 			return true;
         },
         _getJson: function(url,cback) {
             var self = this;           
-			var mydata = (self.options.orig_data!=null) ? self.options.orig_data : "";
-			mydata += (self.options.data!=null) ? self.options.data : "";		
+			var dd = (self.options.orig_data!=null) ? self.options.orig_data : "";
+			dd += (self.options.data!=null) ? self.options.data : "";		
 			$.ajax({
 				url: url,
-				data: mydata,
+				data: dd,
 				type: self.options.dataType,                
 				dataType: "jsonp",
 				method: self.options.method,
@@ -87,8 +87,9 @@
         },
 		_bindSelect:function (id, value) {
 			var self = this;
-			var xurl = this.options.url;			
-			if(this.options.input_param == null) xurl+= (id==null)?"":id;                          
+			var xurl = this.options.url;
+			value = (value==null) ? id : value;
+			if(this.options.input_param == null) xurl+= (id==null)?"":id;                          			
             else this._addParameter(this.options.input_param,value);
 			if(value==this.options.first_optval) {
 				$(this.element).html(this._firstOption());
