@@ -51,7 +51,7 @@
 				f();
 			}					
 		},
-        _getData: function(url,cback) {
+        _getData: function(url,cback) {			
             var self = this;   
             window.__jcombo_data_cache = (typeof window.__jcombo_data_cache === "undefined") ? {} : window.__jcombo_data_cache;
             var cK = JSON.stringify(url + self.options.orig_data + "&" + self.options.data);  
@@ -89,20 +89,21 @@
 			value = (value==null) ? id : value;
 			if(this.options.input_param == null) xurl+= (id==null)?"":id;                          			
             else this._addParameter(this.options.input_param,value);
+			var xid = $(self.element).attr("id");
 			if(value==this.options.first_optval) {
 				$(this.element).html(this._firstOption());
 				$(this.element).attr("disabled","disabled");
 				self._onLoadCall();
+				$(self.element).trigger("change");
 			} else {				
 				this._getData(xurl, function(data) {					
-					if(data.length == 0) $(self.element).attr("disabled","disabled");					
 					$(self.element).html(self._renderSelect(data,value));
-					self._onLoadCall();
-					if(value!=null) {
+					self._onLoadCall();					
+					if(value!=null || id ==null) {
 						$(self.element).trigger("change");
 						if(self.options.onChange != null) self.options.onChange(value);												
 					} 
-					if(data.length>0) $(self.element).removeAttr("disabled");
+					if(data.length>0) $(self.element).removeAttr("disabled");					
 				});
 			}
 		},
@@ -115,7 +116,7 @@
 					$(elem).bind("change",function() {
 						self._bindSelect($(elem).val(),self.options.selected_value);							
 					});	
-					$(elem).trigger("change");							
+					
 				});
            } else this._bindSelect(null,self.options.selected_value);
         }        
