@@ -86,7 +86,6 @@
             return response.join("");
         },
 		_bindSelect:function (id, value) {
-			console.log(id,value);
 			var self = this;
 			var xurl = this.options.url;			
 			if(this.options.input_param == null) xurl+= (id==null)?"":id;                          
