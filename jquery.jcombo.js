@@ -108,7 +108,6 @@
         init: function() {                      
             var self = this;            
             this.options.orig_data = this.options.data;
-            var parent_selected = null;   
             if(this.options.parent!=null) {
                 $(this.options.parent).each(function(index,elem) {                                              
 					var pvalue = $(elem).val();
