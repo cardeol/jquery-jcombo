@@ -85,14 +85,12 @@
             }
             return response.join("");
         },
-		_bindSelect:function (value) {
+		_bindSelect:function (id, value) {
+			console.log(id,value);
 			var self = this;
-			if(typeof value === "undefined") value = this.options.selected_value;
-			var xurl = this.options.url;
-			if(this.options.parent!=null) {
-				if(this.options.input_param == null) xurl+= (value==null)?"":value;                          
-                else this._addParameter(this.options.input_param,value);
-			}
+			var xurl = this.options.url;			
+			if(this.options.input_param == null) xurl+= (id==null)?"":id;                          
+            else this._addParameter(this.options.input_param,value);
 			if(value==this.options.first_optval) {
 				$(this.element).html(this._firstOption());
 				$(this.element).attr("disabled","disabled");
@@ -111,15 +109,16 @@
         init: function() {                      
             var self = this;            
             this.options.orig_data = this.options.data;
-            var parent_selected = null;            
-            if(this.options.url!=null) this._bindSelect();                                    
+            var parent_selected = null;   
             if(this.options.parent!=null) {
                 $(this.options.parent).each(function(index,elem) {                                              
+					var pvalue = $(elem).val();
 					$(elem).bind("change",function() {
-						self._bindSelect($(elem).val());			
-					});								
+						self._bindSelect($(elem).val(),self.options.selected_value);							
+					});	
+					$(elem).trigger("change");							
 				});
-           };           
+           } else this._bindSelect(null,self.options.selected_value);
         }        
     };
     $.fn[pluginName] = function ( options ) {
