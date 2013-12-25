@@ -90,11 +90,11 @@
 			if(this.options.input_param == null) xurl+= (id==null)?"":id;                          			
             else this._addParameter(this.options.input_param,value);
 			var xid = $(self.element).attr("id");
-			if(value==this.options.first_optval) {
+			if(value==this.options.first_optval || id==this.options.first_optval) {
 				$(this.element).html(this._firstOption());
-				$(this.element).attr("disabled","disabled");
-				self._onLoadCall();
+				$(this.element).attr("disabled","disabled");				
 				$(self.element).trigger("change");
+				self._onLoadCall();
 			} else {				
 				this._getData(xurl, function(data) {					
 					$(self.element).html(self._renderSelect(data,value));
@@ -115,8 +115,7 @@
 					var pvalue = $(elem).val();
 					$(elem).bind("change",function() {
 						self._bindSelect($(elem).val(),self.options.selected_value);							
-					});	
-					
+					});
 				});
            } else this._bindSelect(null,self.options.selected_value);
         }        
