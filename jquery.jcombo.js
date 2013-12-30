@@ -28,42 +28,42 @@
     };    
     Plugin.prototype = {                      
         _addParameter: function(param,value) {
-			if(param==null || value == null) return false;
-            this.options.data = param + "=" + value;            
-			return true;
+		if(param==null || value == null) return false;
+		this.options.data = param + "=" + value;            
+		return true;
         },
         _getJson: function(url,cback) {
-            var self = this;           
-			var dd = (self.options.orig_data!=null) ? self.options.orig_data : "";
-			dd += (self.options.data!=null) ? self.options.data : "";		
-			$.ajax({
-				url: url,
-				data: dd,
-				type: self.options.dataType,                
-				dataType: self.options.dataType,
-				method: self.options.method,
-				success: cback
-			});   
+        	var self = this;           
+		var dd = (self.options.orig_data!=null) ? self.options.orig_data : "";
+		dd += (self.options.data!=null) ? self.options.data : "";		
+		$.ajax({
+			url: url,
+			data: dd,
+			type: self.options.dataType,                
+			dataType: self.options.dataType,
+			method: self.options.method,
+			success: cback
+		});   
         },
-		_onLoadCall: function() {
-			if(this.options.onLoad != null) {
-				var f = this.options.onLoad;
-				this.options.onLoad = null;
-				f();
-			}					
-		},
+	_onLoadCall: function() {
+		if(this.options.onLoad != null) {
+			var f = this.options.onLoad;
+			this.options.onLoad = null;
+			f();
+		}					
+	},
         _getData: function(url,cback) {			
             var self = this;   
             window.__jcombo_data_cache = (typeof window.__jcombo_data_cache === "undefined") ? {} : window.__jcombo_data_cache;
             var cK = JSON.stringify(url + self.options.orig_data + "&" + self.options.data);  
             if (!window.__jcombo_data_cache[cK] || !self.options.cache ) {
-                self._getJson(url,function(data) {
-                    window.__jcombo_data_cache[cK] = data;   
-                    cback(data);					
-                });                
+	            self._getJson(url,function(data) {
+	                    window.__jcombo_data_cache[cK] = data;   
+	                    cback(data);					
+	            });                
             } else setTimeout(function() { 			
-				cback(window.__jcombo_data_cache[cK]); 
-			},0);
+		cback(window.__jcombo_data_cache[cK]); 
+	    },0);
         },
         _renderOption: function(v,t,s) {
             var sel = "";
