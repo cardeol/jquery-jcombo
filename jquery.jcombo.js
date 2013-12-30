@@ -14,11 +14,12 @@
             input_param: null,
             data: null,
             selected_value : null,
-			onLoad: null,
-			onChange: null,
+	    onLoad: null,
+	    onChange: null,
             initial_text: "-- Please Select --",            
             method: "GET",
-            dataType: "jsonp"
+            dataType: "jsonp",
+			cache: true
         };        
     function Plugin( element, options ) {
         this.options = $.extend( {}, defaults, options) ;        
@@ -39,7 +40,7 @@
 				url: url,
 				data: dd,
 				type: self.options.dataType,                
-				dataType: "jsonp",
+				dataType: self.options.dataType,
 				method: self.options.method,
 				success: cback
 			});   
@@ -55,7 +56,7 @@
             var self = this;   
             window.__jcombo_data_cache = (typeof window.__jcombo_data_cache === "undefined") ? {} : window.__jcombo_data_cache;
             var cK = JSON.stringify(url + self.options.orig_data + "&" + self.options.data);  
-            if (!window.__jcombo_data_cache[cK] || true ) {
+            if (!window.__jcombo_data_cache[cK] || !self.options.cache ) {
                 self._getJson(url,function(data) {
                     window.__jcombo_data_cache[cK] = data;   
                     cback(data);					
@@ -83,40 +84,41 @@
             }
             return response.join("");
         },
-		_bindSelect:function (id, value) {
-			var self = this;
-			var xurl = this.options.url;
-			value = (value==null) ? id : value;
-			if(this.options.input_param == null) xurl+= (id==null)?"":id;                          			
-            else this._addParameter(this.options.input_param,value);
-			var xid = $(self.element).attr("id");
-			if(value==this.options.first_optval || id==this.options.first_optval) {
-				$(this.element).html(this._firstOption());
-				$(this.element).attr("disabled","disabled");				
-				$(self.element).trigger("change");
-				self._onLoadCall();
-			} else {				
-				this._getData(xurl, function(data) {					
-					$(self.element).html(self._renderSelect(data,value));
-					self._onLoadCall();					
-					if(value!=null || id ==null) {
-						$(self.element).trigger("change");
-						if(self.options.onChange != null) self.options.onChange(value);												
-					} 
-					if(data.length>0) $(self.element).removeAttr("disabled");					
-				});
-			}
-		},
+	_bindSelect:function (id, value) {
+		var self = this;
+		var xurl = this.options.url;
+		value = (value==null) ? id : value;
+		if(this.options.input_param == null) xurl+= (id==null)?"":id;                          			
+            	else this._addParameter(this.options.input_param,value);
+		var xid = $(self.element).attr("id");
+		if(value==this.options.first_optval || id==this.options.first_optval) {
+			$(this.element).html(this._firstOption());
+			$(this.element).attr("disabled","disabled");				
+			$(self.element).trigger("change");
+			self._onLoadCall();
+		} else {
+			self.options.selected_value =value;
+			this._getData(xurl, function(data) {					 	
+				$(self.element).html(self._renderSelect(data,value));
+				self._onLoadCall();					
+				if(value!=null || id ==null) {
+					$(self.element).trigger("change");
+					if(self.options.onChange != null) self.options.onChange(value);												
+				} 
+				if(data.length>0) $(self.element).removeAttr("disabled");					
+			});
+		}
+	},
         init: function() {                      
             var self = this;            
             this.options.orig_data = this.options.data;
             if(this.options.parent!=null) {
                 $(this.options.parent).each(function(index,elem) {                                              
-					var pvalue = $(elem).val();
-					$(elem).bind("change",function() {
-						self._bindSelect($(elem).val(),self.options.selected_value);							
-					});
-				});
+			var pvalue = $(elem).val();
+			$(elem).bind("change",function() {
+				self._bindSelect($(elem).val(),self.options.selected_value);							
+			});
+		});
            } else this._bindSelect(null,self.options.selected_value);
         }        
     };
