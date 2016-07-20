@@ -1,5 +1,5 @@
-jCombo
-======
+jQuery jCombo
+=============
 
 <a href="http://www.prodiven.com/jcombo">Project Page</a>
 
